@@ -1,0 +1,9 @@
+{
+  "name": "open-3d-billiards-claude-fable-5-v2",
+  "private": true,
+  "type": "module",
+  "description": "JarvisUni 开放式3D台球评测：Claude-Fable-5-V2 原版前端源码",
+  "scripts": {
+    "start": "python -m http.server 8080 --bind 127.0.0.1"
+  }
+}

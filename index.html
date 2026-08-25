@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>开放式3D台球 Claude-Fable-5-V2 | JarvisUni</title>
+<meta name="description" content="Claude-Fable-5-V2 在「开放式3D台球」测试中的结果页，展示开放命题下的 3D 台球场景、击球反馈、镜头控制、玩法流程与产品级界面实现。">
+<meta name="keywords" content="开放式3D台球, Open 3D Billiards, Claude-Fable-5-V2, JarvisUni, TOPAI, billiards, pool, 3D scene, game benchmark">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="canonical" href="https://topai.tonyhub.xyz/Open-3D-Billiards/claudefable5v2.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TOPAI">
+<meta property="og:title" content="开放式3D台球 Claude-Fable-5-V2 | JarvisUni">
+<meta property="og:description" content="Claude-Fable-5-V2 在「开放式3D台球」测试中的结果页，展示开放命题下的 3D 台球场景、击球反馈、镜头控制、玩法流程与产品级界面实现。">
+<meta property="og:url" content="https://topai.tonyhub.xyz/Open-3D-Billiards/claudefable5v2.html">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="开放式3D台球 Claude-Fable-5-V2 | JarvisUni">
+<meta name="twitter:description" content="Claude-Fable-5-V2 在「开放式3D台球」测试中的结果页，展示开放命题下的 3D 台球场景、击球反馈、镜头控制、玩法流程与产品级界面实现。">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "开放式3D台球 Claude-Fable-5-V2 | JarvisUni",
+  "url": "https://topai.tonyhub.xyz/Open-3D-Billiards/claudefable5v2.html",
+  "description": "Claude-Fable-5-V2 在「开放式3D台球」测试中的结果页，展示开放命题下的 3D 台球场景、击球反馈、镜头控制、玩法流程与产品级界面实现。"
+}
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #08080c;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif; color: #e8e4d8;
+    touch-action: none; user-select: none; -webkit-user-select: none; }
+  #gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+
+  /* ---------- 通用面板 ---------- */
+  .panel { position: fixed; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; z-index: 20;
+    background: radial-gradient(ellipse at center, rgba(10,26,16,.88), rgba(4,6,8,.96)); }
+  .panel.hidden, .hidden { display: none !important; }
+  .card { background: rgba(16,22,18,.92); border: 1px solid rgba(212,180,100,.25);
+    border-radius: 14px; padding: 28px 36px; box-shadow: 0 18px 60px rgba(0,0,0,.6);
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    max-width: min(92vw, 460px); max-height: 86vh; overflow-y: auto; }
+  h1 { font-size: 40px; letter-spacing: 10px; color: #e9c76a; font-weight: 700;
+    text-shadow: 0 2px 18px rgba(233,199,106,.35); margin-bottom: 2px; }
+  .sub { color: #9aa08c; font-size: 13px; letter-spacing: 3px; margin-bottom: 14px; }
+  button { font-family: inherit; font-size: 16px; letter-spacing: 2px; cursor: pointer;
+    background: linear-gradient(180deg, #1d4a2e, #143722); color: #e8e4d8;
+    border: 1px solid rgba(212,180,100,.35); border-radius: 9px; padding: 11px 0;
+    width: 240px; transition: filter .12s, transform .06s; }
+  button:hover { filter: brightness(1.25); }
+  button:active { transform: scale(.97); }
+  button.gold { background: linear-gradient(180deg, #8a6a20, #5e4712); }
+  button.ghostbtn { background: transparent; border-color: rgba(255,255,255,.18); color: #aab; }
+  button.small { width: auto; padding: 8px 18px; font-size: 14px; }
+  input { font-family: inherit; font-size: 17px; letter-spacing: 4px; text-align: center;
+    background: rgba(0,0,0,.4); color: #ffe9a8; border: 1px solid rgba(212,180,100,.4);
+    border-radius: 8px; padding: 10px; width: 240px; outline: none; text-transform: uppercase; }
+  .row { display: flex; gap: 10px; }
+  .note { font-size: 12px; color: #778; line-height: 1.7; text-align: center; }
+  .bigcode { font-size: 38px; letter-spacing: 10px; color: #ffe9a8; font-weight: bold; padding: 4px 0; }
+  .lvbtn { display: flex; flex-direction: column; gap: 2px; align-items: flex-start;
+    padding: 10px 16px; width: 300px; }
+  .lvbtn small { color: #9aa08c; font-size: 12px; letter-spacing: 0; }
+
+  /* ---------- HUD ---------- */
+  #hud { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+  #topBar { position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 14px; align-items: center; }
+  .pcard { background: rgba(10,14,12,.78); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 10px; padding: 7px 14px; min-width: 150px; text-align: center;
+    transition: border-color .3s, box-shadow .3s; }
+  .pcard.active { border-color: #e9c76a; box-shadow: 0 0 14px rgba(233,199,106,.35); }
+  .pcard .pname { font-size: 14px; color: #fff; letter-spacing: 1px; }
+  .pcard .pgroup { font-size: 11px; color: #9aa08c; margin-top: 1px; }
+  .pcard .pballs { display: flex; gap: 3px; justify-content: center; margin-top: 4px; min-height: 10px; }
+  .bdot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(255,255,255,.5); }
+  .bdot.striped { background: linear-gradient(180deg, #fff 22%, var(--c) 22%, var(--c) 78%, #fff 78%) !important; }
+  #vsTag { font-size: 12px; color: #667; letter-spacing: 2px; }
+  #toast { position: absolute; top: 86px; left: 50%; transform: translateX(-50%);
+    background: rgba(20,26,20,.92); border: 1px solid rgba(233,199,106,.4); color: #ffe9a8;
+    padding: 9px 22px; border-radius: 20px; font-size: 15px; letter-spacing: 1px;
+    opacity: 0; transition: opacity .25s; white-space: nowrap; max-width: 90vw; }
+  #hint { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,.5); font-size: 12.5px; letter-spacing: 1px; text-align: center;
+    background: rgba(0,0,0,.35); padding: 6px 16px; border-radius: 14px; white-space: nowrap; }
+
+  /* 力度条 */
+  #powerWrap { position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+    width: 46px; height: 46vh; min-height: 220px; pointer-events: auto; }
+  #powerTrack { position: absolute; inset: 0; background: rgba(8,10,10,.75);
+    border: 1px solid rgba(255,255,255,.18); border-radius: 23px; overflow: hidden; }
+  #powerFill { position: absolute; left: 0; right: 0; bottom: 0; height: 0%;
+    background: linear-gradient(180deg, #ff5544, #e9c76a 60%, #47b26b);
+    border-radius: 0 0 23px 23px; }
+  #powerLabel { position: absolute; top: -26px; width: 100%; text-align: center;
+    font-size: 12px; color: #cbb; letter-spacing: 1px; }
+
+  /* 旋转(加塞)控制 */
+  #spinMini { position: absolute; left: 18px; bottom: 18px; width: 74px; height: 74px;
+    border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #cfc8b8 65%, #a09880);
+    border: 2px solid rgba(233,199,106,.5); pointer-events: auto; cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,.5); }
+  #spinMiniDot, #spinDot { position: absolute; width: 12px; height: 12px; border-radius: 50%;
+    background: #d1301e; border: 2px solid #fff; transform: translate(-50%, -50%);
+    left: 50%; top: 50%; }
+  #spinBig { position: fixed; inset: 0; z-index: 30; display: flex; align-items: center;
+    justify-content: center; background: rgba(0,0,0,.55); }
+  #spinPad { position: relative; width: min(64vw, 280px); height: min(64vw, 280px); border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff, #d8d2c2 60%, #a89f88);
+    border: 3px solid rgba(233,199,106,.6); box-shadow: 0 20px 60px rgba(0,0,0,.7);
+    touch-action: none; }
+  #spinPad::after { content: ''; position: absolute; left: 50%; top: 50%; width: 2px; height: 100%;
+    background: rgba(0,0,0,.07); transform: translate(-50%, -50%); }
+  #spinPad::before { content: ''; position: absolute; left: 50%; top: 50%; width: 100%; height: 2px;
+    background: rgba(0,0,0,.07); transform: translate(-50%, -50%); }
+  #spinCtrl { display: flex; flex-direction: column; gap: 14px; align-items: center; }
+  #elevRow { display: flex; align-items: center; gap: 10px; color: #cbb; font-size: 13px;
+    background: rgba(10,14,12,.85); padding: 10px 18px; border-radius: 12px; }
+  #elevSlider { width: 180px; }
+  #spinCtrl .row button { width: auto; padding: 8px 22px; font-size: 14px; }
+
+  /* 右下按钮组 */
+  #btnCol { position: absolute; right: 16px; bottom: 16px; display: flex; flex-direction: column;
+    gap: 8px; pointer-events: auto; }
+  #btnCol button { width: 46px; height: 46px; padding: 0; font-size: 19px; border-radius: 10px;
+    background: rgba(12,18,14,.8); }
+  #challengeInfo { position: absolute; top: 12px; left: 14px; max-width: 300px;
+    background: rgba(10,14,12,.8); border: 1px solid rgba(255,255,255,.12); border-radius: 10px;
+    padding: 10px 14px; font-size: 13px; line-height: 1.55; color: #cfc8b0; pointer-events: none; }
+  #challengeInfo b { color: #ffe9a8; }
+  #retryBtn { position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    pointer-events: auto; width: auto; padding: 9px 16px; font-size: 14px; }
+
+  @media (max-width: 720px) {
+    h1 { font-size: 30px; letter-spacing: 6px; }
+    .pcard { min-width: 106px; padding: 5px 8px; }
+    .pcard .pname { font-size: 12px; }
+    #powerWrap { width: 40px; height: 38vh; right: 10px; }
+    #spinMini { width: 60px; height: 60px; }
+    #hint { display: none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+
+<!-- 主菜单 -->
+<div id="menu" class="panel">
+  <div class="card">
+    <h1>神杆</h1>
+    <div class="sub">3 D &nbsp; 台 球 &nbsp; · &nbsp; B I L L I A R D S</div>
+    <button id="btnPractice">练习模式</button>
+    <button id="btnAI">人机对战 · 八球</button>
+    <button id="btnLocal">双人同屏 · 八球</button>
+    <button id="btnOnline" class="gold">联机对战 · 八球</button>
+    <button id="btnChallenge">花式挑战</button>
+    <div class="note">拖动瞄准 · 右侧拉杆蓄力 · 左下角设置杆法<br>方向键微调 · V 键俯视 · F 键自由视角</div>
+  </div>
+</div>
+
+<!-- 联机面板 -->
+<div id="onlinePanel" class="panel hidden">
+  <div class="card">
+    <h1 style="font-size:26px;letter-spacing:4px;">联机对战</h1>
+    <input id="nameInput" maxlength="8" placeholder="你的昵称" style="text-transform:none;letter-spacing:2px;">
+    <button id="btnCreateRoom" class="gold">创建房间</button>
+    <div class="row">
+      <input id="codeInput" maxlength="5" placeholder="房间码" style="width:150px;">
+      <button id="btnJoinRoom" class="small" style="width:90px;">加入</button>
+    </div>
+    <div id="roomStatus" class="note"></div>
+    <div id="roomCodeShow" class="bigcode hidden"></div>
+    <button id="btnOnlineBack" class="ghostbtn">返回</button>
+  </div>
+</div>
+
+<!-- 挑战选关 -->
+<div id="challengePanel" class="panel hidden">
+  <div class="card">
+    <h1 style="font-size:26px;letter-spacing:4px;">花式挑战</h1>
+    <div id="levelList" style="display:flex;flex-direction:column;gap:8px;"></div>
+    <button id="btnChallengeBack" class="ghostbtn">返回</button>
+  </div>
+</div>
+
+<!-- 结算 -->
+<div id="endPanel" class="panel hidden">
+  <div class="card">
+    <h1 id="endTitle" style="font-size:32px;letter-spacing:4px;">胜利</h1>
+    <div id="endDetail" class="note" style="font-size:14px;color:#cfc8b0;"></div>
+    <button id="btnRematch" class="gold">再来一局</button>
+    <button id="btnNextLevel" class="gold hidden">下一关</button>
+    <button id="btnEndMenu" class="ghostbtn">返回菜单</button>
+  </div>
+</div>
+
+<!-- HUD -->
+<div id="hud" class="hidden">
+  <div id="topBar">
+    <div class="pcard" id="pcard0">
+      <div class="pname">玩家1</div><div class="pgroup">未定</div><div class="pballs"></div>
+    </div>
+    <div id="vsTag">VS</div>
+    <div class="pcard" id="pcard1">
+      <div class="pname">玩家2</div><div class="pgroup">未定</div><div class="pballs"></div>
+    </div>
+  </div>
+  <div id="toast"></div>
+  <div id="challengeInfo" class="hidden"></div>
+  <button id="retryBtn" class="hidden">↺ 重摆本关</button>
+  <div id="powerWrap">
+    <div id="powerLabel">力度</div>
+    <div id="powerTrack"><div id="powerFill"></div></div>
+  </div>
+  <div id="spinMini"><div id="spinMiniDot"></div></div>
+  <div id="btnCol">
+    <button id="btnTop" title="俯视 (V)">⬒</button>
+    <button id="btnFree" title="自由视角 (F)">🎥</button>
+    <button id="btnSound" title="音效">🔊</button>
+    <button id="btnMenu" title="退出到菜单">☰</button>
+  </div>
+  <div id="hint"></div>
+</div>
+
+<!-- 加塞大盘 -->
+<div id="spinBig" class="hidden">
+  <div id="spinCtrl">
+    <div id="spinPad"><div id="spinDot"></div></div>
+    <div id="elevRow">抬杆 <input type="range" id="elevSlider" min="0" max="65" value="0" step="1"><span id="elevVal">0°</span></div>
+    <div class="row">
+      <button id="spinReset" class="small">归零</button>
+      <button id="spinClose" class="small gold">确定</button>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "m/three": "./src/three.js",
+    "m/artphoto": "./src/artphoto.js",
+    "m/physics": "./src/physics.js",
+    "m/rules": "./src/rules.js",
+    "m/sound": "./src/sound.js",
+    "m/net": "./src/net.js",
+    "m/ai": "./src/ai.js",
+    "m/challenges": "./src/challenges.js",
+    "m/scene": "./src/scene.js",
+    "m/main": "./src/main.js"
+  }
+}
+</script>
+<script type="module">import 'm/main';</script>
+</body>
+</html>
