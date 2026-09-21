@@ -3,7 +3,12 @@
   "private": true,
   "type": "module",
   "description": "JarvisUni 开放式3D台球评测：Claude-Fable-5-V2 原版前端源码",
+  "homepage": "https://yanyue404.github.io/Open-3D-Billiards/",
   "scripts": {
-    "start": "python -m http.server 8080 --bind 127.0.0.1"
+    "start": "python -m http.server 8080 --bind 127.0.0.1",
+    "deploy": "node scripts/deploy-gh-pages.mjs"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
   }
 }

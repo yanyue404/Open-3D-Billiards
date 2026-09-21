@@ -20,6 +20,24 @@ python -m http.server 8080 --bind 127.0.0.1
 
 浏览器打开 [http://127.0.0.1:8080/](http://127.0.0.1:8080/)
 
+## 部署到 GitHub Pages
+
+首次需要安装依赖：
+
+```bash
+npm install
+```
+
+确认远程仓库是 GitHub（本仓库为 `origin`），然后发布到 `gh-pages` 分支：
+
+```bash
+npm run deploy
+```
+
+发布后访问：[https://yanyue404.github.io/Open-3D-Billiards/](https://yanyue404.github.io/Open-3D-Billiards/)
+
+仓库 Settings → Pages 的 Source 需设为 **Deploy from a branch**，分支选 **gh-pages**，目录选 **/**。
+
 练习、人机、双人同屏、花式挑战可直接玩。联机对战依赖原项目未公开的 `server/server.js`（`ws://当前域名/ws`），评测站没有放出服务端，因此联机无法在本地还原。
 
 ## 目录
